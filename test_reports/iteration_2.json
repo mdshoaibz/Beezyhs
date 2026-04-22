@@ -1,0 +1,48 @@
+{
+  "summary": "Iteration 2 full-stack testing of Beezy Home Services admin dashboard, JWT auth, paginated admin endpoints, and Resend email background notifications. Backend: 28/28 pytest cases pass (auth, 401 gating on admin endpoints, public creates returning 201 with non-blocking BG tasks, pagination shape + desc sort, stats totals, 422 validation, old public GET lists removed). Frontend: Admin login, protected route redirect, stats, all 4 tabs, search, page-size change, prev/next, refresh, CSV export, and logout all work end-to-end against production preview URL. Landing + Investors pages still load (regression OK).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/auth/login", "issue": "No brute-force lockout or rate limiting. A single admin account with only email+password is vulnerable to credential stuffing. Playbook mentions 5-fail lockout, not implemented. Acceptable for internal MVP, flag for prod hardening."},
+      {"endpoint": "POST /api/auth/login", "issue": "Uses Bearer token in localStorage (not httpOnly cookie). Playbook prefers httpOnly cookies for CSRF safety. Acceptable for admin-only console but worth noting."},
+      {"endpoint": "Resend", "issue": "SENDER_EMAIL=onboarding@resend.dev is the Resend sandbox sender; will only deliver to the verified account owner (mohammadshoaibzfs@gmail.com, note 'a'). Any other recipient will get a delivery failure logged server-side. Non-blocking since emails run via BackgroundTasks and POST returns 201 in <1s. Ensure ADMIN_NOTIFY_EMAIL matches the Resend account owner (it does in .env)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "BookingWidget service <select>", "issue": "Pre-existing from iteration 1 — native <select><option> wrapped in a <span> by build tagger still triggers 'span cannot be a child of option' React hydration warning on Landing. Not in admin dashboard scope but visible in console when navigating home page.", "selector": "[data-testid='booking-service-select']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_beezy_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(Optional hardening) Add login rate-limit / brute-force lockout after 5 failed attempts per IP/email.",
+    "(Optional hardening) Move token to httpOnly cookie to kill XSS token-theft vector.",
+    "(Pre-existing) Replace native <select> in BookingWidget with shadcn Select to silence <option><span> hydration warning on Landing."
+  ],
+  "critical_code_review_comments": [
+    "server.py seed_admin() correctly re-syncs password if ADMIN_PASSWORD env changes — idempotent and playbook-aligned.",
+    "bcrypt hash confirmed $2b$ prefix in db.admins (verified via script). PASS playbook check.",
+    "All 5 admin endpoints correctly gated via Depends(get_current_admin) — all return 401 when unauthenticated (verified via parametrized test).",
+    "Public POST endpoints return 201 and schedule emails via BackgroundTasks — POST response time <5s verified (fire-and-forget works).",
+    "_paginate() correctly caps page_size at 200, floors page at 1, excludes MongoDB _id, and sorts created_at desc. items/total/page/page_size/pages shape verified.",
+    "Admin stats endpoint correctly validates total_leads = sum of all 4 collections.",
+    "on_event('startup'/'shutdown') is deprecated in FastAPI — migrate to lifespan context manager (pre-existing from iteration 1).",
+    "CORS allow_origins='*' combined with allow_credentials=True is technically invalid per spec (browsers reject wildcard with credentials). Currently works because admin console uses Bearer token not cookie, but tighten before prod.",
+    "AdminDashboard.jsx: search is client-side only (filters current page, not server). OK for MVP scale; document it so ops don't expect to search across all leads."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_beezy_api.py"
+  ],
+  "success_rate": {"backend": "100% (28/28)", "frontend": "100% (15/15 UI checks)"},
+  "test_credentials": "email: mohammedshoaibzfs@gmail.com / password: Denx@1e05 (verified working)",
+  "seed_data_creation": "Added TEST_-prefixed rows in bookings, pilot_signups, shield_subscriptions, investor_inquiries collections via POST tests. Admin account auto-seeded by server startup.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Regression suite at /app/backend/tests/test_beezy_api.py runs 28 cases including auth gating, pagination, sort-order, and 201-with-bg-task latency. Run with: REACT_APP_BACKEND_URL=<url> pytest backend/tests/test_beezy_api.py -v. All admin UI data-testids match the spec (admin-email-input, admin-password-input, admin-login-btn, admin-dashboard, admin-logout-btn, admin-tabs, tab-{bookings,pilot,shield,investors}, admin-search, admin-pagesize, admin-export-btn, admin-prev-btn, admin-next-btn, admin-refresh-btn, stat-{total,bookings,pilot,shield,investors}, row-{tab}-{id}). Token key in localStorage: beezy_admin_token. The pre-existing BookingWidget hydration warning is documented in iteration_1.json and is out of scope for iteration 2.",
+  "rca of the issue": "No bugs found in iteration 2 scope. All auth, pagination, email BG tasks, and admin UI flows work as designed."
+}
