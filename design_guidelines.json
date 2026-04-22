@@ -1,0 +1,153 @@
+{
+  "theme": {
+    "archetype": "4 (Swiss & High-Contrast)",
+    "mode": "light",
+    "description": "Premium Urban Utility. The aesthetic is concrete, fast-action, and authoritative, merging high-end editorial layouts with hyper-functional service app design. Inspired by Swiss grids, featuring stark white and intense black, contrasted with a distinct 'Beezy Honey Gold' to signal trust, speed, and premium quality."
+  },
+  "colors": {
+    "background": "#FAFAFA",
+    "foreground": "#0A0A0A",
+    "primary": "#FFB800",
+    "primary_foreground": "#0A0A0A",
+    "secondary": "#1A1A1A",
+    "secondary_foreground": "#FAFAFA",
+    "muted": "#F0F0F0",
+    "muted_foreground": "#666666",
+    "border": "#E5E5E5",
+    "accent": "#FF3B30",
+    "accent_foreground": "#FFFFFF",
+    "success": "#00C853",
+    "surface": "#FFFFFF",
+    "surface_glass": "rgba(255, 255, 255, 0.8)"
+  },
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "IBM Plex Sans",
+    "scales": {
+      "h1": "text-5xl sm:text-6xl+ tracking-tighter leading-none font-black",
+      "h2": "text-4xl sm:text-5xl tracking-tight leading-tight font-bold",
+      "h3": "text-2xl sm:text-3xl tracking-tight leading-snug font-bold",
+      "h4": "text-xl font-bold tracking-tight",
+      "body_lg": "text-lg leading-relaxed",
+      "body": "text-base leading-relaxed",
+      "body_sm": "text-sm leading-normal",
+      "overline": "text-xs font-bold tracking-[0.2em] uppercase"
+    },
+    "rules": [
+      "Headings strictly use Cabinet Grotesk, varying from Bold to Black.",
+      "Overlines must be IBM Plex Sans, uppercase, wide tracking.",
+      "Never center text by default; use stark left alignment unless optical balance dictates otherwise."
+    ]
+  },
+  "layout_and_spacing": {
+    "strategy": "The 'Control Room' Grid & Bento Boxes",
+    "container_padding": "px-4 sm:px-8 md:px-12 lg:px-24",
+    "section_spacing": "py-24 sm:py-32",
+    "grid_gap": "gap-8 lg:gap-12",
+    "border_radius": "rounded-none",
+    "rules": [
+      "Containers with borders must have internal padding (p-6 to p-8).",
+      "Avoid traditional 'cards' with drop shadows. Use 1px hard borders (border-black/10) with sharp corners.",
+      "Use massive negative space to isolate high-value components (e.g., booking form)."
+    ]
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary_foreground font-bold uppercase tracking-wide px-8 py-4 hover:bg-black hover:text-white transition-colors duration-300",
+      "secondary": "bg-transparent border-2 border-foreground text-foreground font-bold uppercase tracking-wide px-8 py-4 hover:bg-foreground hover:text-background transition-colors",
+      "ghost": "text-foreground font-bold hover:text-primary transition-colors"
+    },
+    "inputs": "border-b-2 border-border bg-transparent px-0 py-3 text-lg focus:border-foreground focus:ring-0 focus:outline-none transition-colors",
+    "cards": "bg-surface border border-border p-8 hover:border-foreground transition-colors duration-300",
+    "badges": "inline-flex items-center px-3 py-1 text-xs font-bold uppercase tracking-wider border border-foreground bg-white"
+  },
+  "media": {
+    "logo_url": "https://customer-assets.emergentagent.com/job_169ae0c9-ce4a-4a81-8065-3cce09f0ee5a/artifacts/g9mkkuq1_IMG_0048.PNG",
+    "images": {
+      "hero_background": {
+        "url": "https://static.prod-images.emergentagent.com/jobs/169ae0c9-ce4a-4a81-8065-3cce09f0ee5a/images/112cfeab94a0a66d7904d7d6d8553350109ebf69ff26e717815d150f16693863.png",
+        "description": "Abstract architectural background with honey gold and matte black geometric shapes."
+      },
+      "services_abstract": {
+        "url": "https://static.prod-images.emergentagent.com/jobs/169ae0c9-ce4a-4a81-8065-3cce09f0ee5a/images/d221eb820e34ef9097a57a5411753c1d35654e9cd93d0449a97190a732c9a8d0.png",
+        "description": "Flat lay of premium matte black tools on honey yellow background."
+      },
+      "bangalore_city": {
+        "url": "https://images.pexels.com/photos/14845309/pexels-photo-14845309.jpeg",
+        "description": "Bengaluru cityscape illuminated at dusk."
+      },
+      "plumber_service": {
+        "url": "https://images.pexels.com/photos/29226620/pexels-photo-29226620.jpeg",
+        "description": "Close up of a plumber fixing pipes."
+      },
+      "cleaner_service": {
+        "url": "https://images.pexels.com/photos/9462732/pexels-photo-9462732.jpeg",
+        "description": "Professional house cleaner."
+      },
+      "elder_care_service": {
+        "url": "https://images.pexels.com/photos/18509794/pexels-photo-18509794.jpeg",
+        "description": "Caregiver assisting a senior adult."
+      }
+    }
+  },
+  "sections": [
+    {
+      "name": "Navigation / Header",
+      "design": "Glassmorphism header (bg-white/80 backdrop-blur-xl border-b border-border). Left-aligned logo, right-aligned nav links and 'Book Now' primary CTA.",
+      "test_ids": ["nav-logo", "nav-services-link", "nav-investors-link", "nav-book-cta"]
+    },
+    {
+      "name": "Hero Section",
+      "design": "Massive left-aligned H1 text 'Your Trusted Partner for Home Solutions, Delivered with Speed & Care.' over a split layout. Right side contains the booking flow widget. Use 'hero_background' faintly layered behind the left text block with a blend mode.",
+      "test_ids": ["hero-heading", "hero-book-widget"]
+    },
+    {
+      "name": "Service Booking Widget (Embedded in Hero / Sticky)",
+      "design": "High-contrast 'Control Room' style bento box. Step 1: Service Select (Plumbing, Electrical, etc.). Step 2: Date/Time picker. Step 3: Address. Use heavily customized Shadcn Select and Calendar components. Sharp edges, active state marked with 'Beezy Gold'.",
+      "test_ids": ["booking-service-select", "booking-date-picker", "booking-address-input", "booking-submit-btn"]
+    },
+    {
+      "name": "Services Showcase (Bento Grid)",
+      "design": "Asymmetrical 12-column bento grid. Plumber and Electrician take col-span-8 or col-span-6. Use actual imagery (plumber_service, cleaner_service) with heavy B&W filters that turn color on hover. Badges on top left: 'LIVE', 'MONTH 3', 'MONTH 6'.",
+      "test_ids": ["service-card-plumbing", "service-card-electrical", "service-card-cleaning", "service-card-eldercare"]
+    },
+    {
+      "name": "Beezy Shield Subscription",
+      "design": "Dark mode section (bg-black text-white) to create tension and highlight premium tier. Accent with Beezy Gold. Display ₹2,999/yr pricing aggressively large. List benefits (4 plumbing visits, 2 electrical, 1 deep clean, same-day guarantee).",
+      "test_ids": ["shield-pricing", "shield-subscribe-btn"]
+    },
+    {
+      "name": "Why Beezy / Trust Section",
+      "design": "4-column grid with stark, oversized typography. '60 MIN RESPONSE', 'VERIFIED PROS', 'SINGLE PLATFORM', 'TRANSPARENT PRICING'. Use IBM Plex Sans Mono or IBM Plex Sans for numbers to give a technical, reliable feel.",
+      "test_ids": ["trust-metric-1", "trust-metric-2", "trust-metric-3", "trust-metric-4"]
+    },
+    {
+      "name": "Join the Pilot (Waitlist)",
+      "design": "Housed within a soft gray (bg-muted) container with a harsh black border. Input fields for Name, Phone, Apartment Complex. Sub-text highlighting '30-day free pilot in Koramangala'.",
+      "test_ids": ["pilot-name-input", "pilot-phone-input", "pilot-apartment-input", "pilot-submit-btn"]
+    },
+    {
+      "name": "Investor Pitch (Dedicated Section)",
+      "design": "Editorial layout. Use 'bangalore_city' image as a cinematic, grainy background with 60% black overlay. Stats: ₹1.5L Cr Market, ₹15 Lakhs Ask. Embed Pitch deck in a sleek, hard-edged iframe container. 'Phase 1 / 2 / 3' roadmap shown via a 'Tracing Beam' vertical line.",
+      "test_ids": ["investor-market-stat", "investor-ask-stat", "investor-deck-embed", "investor-contact-cta"]
+    },
+    {
+      "name": "Footer",
+      "design": "Massive typography for 'BEEZY'. Solid black background. Yellow links. Email: beezyassistance@gmail.com clearly visible at text-2xl.",
+      "test_ids": ["footer-email-link", "footer-social-links"]
+    }
+  ],
+  "interactions": {
+    "hover": "High contrast shifts. Buttons invert (Gold -> Black). Images switch from grayscale to full color.",
+    "scroll": "Use Framer Motion to slide in elements slightly from the bottom. Stagger bento box children.",
+    "active_states": "Forms inputs gain a thick 2px black bottom border. Select elements have a solid yellow left border when active."
+  },
+  "instructions_to_main_agent": [
+    "DO NOT use generic Inter font. Import and use Cabinet Grotesk (headings) and IBM Plex Sans (body) via Google Fonts, Fontsource, or equivalent.",
+    "All containers must use sharp corners (rounded-none). The brand is functional and fast, not soft and bubbly.",
+    "Rely heavily on the grid. If using Shadcn components, override their default soft shadows and radii to match the 'Swiss Brutalist' theme.",
+    "Ensure all data-testids are correctly applied as specified in the sections.",
+    "Implement the 'Beezy Gold' (#FFB800) primarily as an accent, active state, or CTA color to maintain high contrast against the black and white base.",
+    "Ensure all code generated is in .js and .jsx format, not .tsx."
+  ]
+}
