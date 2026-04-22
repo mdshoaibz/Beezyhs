@@ -1,0 +1,47 @@
+{
+  "summary": "Tested Beezy Home Services full stack. Backend: 8/8 pytest cases pass for all 5 resources (root, services, bookings, pilot, shield, investor) including validation. Frontend: Landing + Investors render; Booking 3-step flow, Pilot form, Shield reserve form, and Investor contact form all submit successfully and persist via the public preview URL.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/bookings, /api/pilot-signups, /api/shield-subscribe, /api/investor-contact", "issue": "Returns 200 instead of 201 on create. Functional but not REST-idiomatic."},
+      {"endpoint": "GET /api/shield-subscribe, /api/investor-contact", "issue": "Using same path for GET (list) as POST (create) is fine but unconventional; consider /api/shield-subscriptions, /api/investor-inquiries."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "BookingWidget service select", "issue": "Uses a native <select> instead of the shadcn Select component. Renders fine but is inconsistent with the slot picker (shadcn) and inferior look-and-feel on the rest of the form. Also produces a React hydration warning because <option> contains an auto-injected <span> wrapper from the build tagger.", "selector": "[data-testid=booking-service-select]", "priority": "MEDIUM"},
+      {"component": "Navbar mobile toggle", "issue": "Mobile hamburger button does not expose data-testid=nav-mobile-toggle as documented in the request. Add it for testability.", "selector": "header button.lg:hidden", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Landing hero @ 390px", "issues": ["The Emergent badge (bottom-left) overlaps the '60 min RESPONSE' stat tile on small screens, partially hiding text."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_beezy_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Replace native <select> in BookingWidget with shadcn Select for visual + a11y consistency and to silence the <option><span> hydration warning.",
+    "Add data-testid=nav-mobile-toggle to the Navbar hamburger button.",
+    "Optionally return 201 from POST create endpoints.",
+    "Adjust mobile hero spacing so the Emergent badge does not overlap the stats row."
+  ],
+  "critical_code_review_comments": [
+    "server.py: All POST creates return 200 (FastAPI default). Use status_code=201 for create endpoints.",
+    "server.py: GET and POST share the same path (/api/shield-subscribe, /api/investor-contact). Works, but list endpoints should be plural and distinct (/api/shield-subscriptions, /api/investor-inquiries).",
+    "server.py: No pagination or auth on GET list endpoints — they expose all submissions publicly. Acceptable for MVP but flag as data-leak risk before launch.",
+    "server.py uses on_event('shutdown') — deprecated in FastAPI; migrate to lifespan handlers.",
+    "BookingWidget should use the shadcn Select for service to match the rest of the design system."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_beezy_api.py"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "N/A — no auth in app",
+  "seed_data_creation": "Test rows prefixed TEST_ created in collections: bookings, pilot_signups, shield_subscriptions, investor_inquiries.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression suite is /app/backend/tests/test_beezy_api.py (pytest, 8 cases). All endpoints stable. UI flows work via REACT_APP_BACKEND_URL. If main agent migrates BookingWidget to shadcn Select, retest by clicking [data-testid=booking-service-select] then a [role=option] entry. Mobile menu toggle currently has no data-testid; if added as nav-mobile-toggle, the existing Playwright script will pick it up.",
+  "rca of the issue": "Native <select><option> with the build tagger injecting <span> wrappers triggers React's 'span cannot be a child of option' hydration warning. Fix: switch BookingWidget service picker to shadcn Select (already used for slot)."
+}
